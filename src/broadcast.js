@@ -7,7 +7,7 @@ const CHATFUEL_BASE_URL = 'https://api.chatfuel.com';
 
 const validateExpectedParameters = (options) => {
     const expectedParameters = [
-        'botId', 'blockId', 'token', 'userId'
+        'botId', 'blockId', 'token', 'userId',
     ];
 
     expectedParameters.forEach((parameter) => {
@@ -15,37 +15,38 @@ const validateExpectedParameters = (options) => {
             throw new Error(`Expected ${parameter} to be passed`);
         }
     });
-}
-
-const createChatfuelBroadcastUrl = (botId, userId) => {
-    return `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
 };
+
+const createChatfuelBroadcastUrl = (botId, userId) => `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
 
 const broadcast = (options) => {
     validateExpectedParameters(options);
 
-    const { botId, blockId, token, userId, attributes } = options;
+    const {
+        botId, blockId, token, userId, attributes,
+    } = options;
 
     const chatfuelBroadcastUrl = createChatfuelBroadcastUrl(botId, userId);
 
-    const query = Object.assign({},
+    const query = Object.assign(
+        {},
         {
             chatfuel_token: token,
-            chatfuel_block_name: blockId
+            chatfuel_block_name: blockId,
         },
-        attributes
+        attributes,
     );
 
     const chatfuelApiUrl = url.format({
         pathname: chatfuelBroadcastUrl,
-        query
+        query,
     });
 
     const requestOptions = {
         uri: chatfuelApiUrl,
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Content-Type': 'application/json',
+        },
     };
 
     return requestPromise.post(requestOptions);

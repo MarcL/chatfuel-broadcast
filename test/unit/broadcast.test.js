@@ -1,7 +1,7 @@
-import requestPromise from 'request-promise';
-import broadcast from '../../src/broadcast';
 import sinon from 'sinon';
 import { expect } from 'chai';
+import requestPromise from 'request-promise';
+import broadcast from '../../src/broadcast';
 
 describe('Chatfuel.broadcast()', () => {
     let defaultOptions;
@@ -18,7 +18,7 @@ describe('Chatfuel.broadcast()', () => {
             blockId: defaultBlocklId,
             token: defaultToken,
             userId: defaultUserId,
-            attributes: {}
+            attributes: {},
         };
 
         stubRequestPromisePost = sinon.stub(requestPromise, 'post');
@@ -69,7 +69,7 @@ describe('Chatfuel.broadcast()', () => {
 
     it('should set expected request headers', () => {
         const expectedRequestHeaders = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         };
 
         broadcast(defaultOptions);
@@ -81,7 +81,7 @@ describe('Chatfuel.broadcast()', () => {
     it('should append passed attributes as endpoint query parameters', () => {
         const givenAttributes = {
             fakeattribute1: 'fakeAttribute1',
-            fakeattribute2: 'fakeAttribute2'
+            fakeattribute2: 'fakeAttribute2',
         };
         const options = Object.assign({}, defaultOptions, { attributes: givenAttributes });
         const fakeAttributeQueryParameters = 'fakeattribute1=fakeAttribute1&fakeattribute2=fakeAttribute2';
