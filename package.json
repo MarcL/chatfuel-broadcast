@@ -2,12 +2,25 @@
     "name": "chatfuel-broadcast",
     "version": "0.1.0",
     "description": "Wrapper for Chatfuel broadcast API",
-    "main": "index.js",
+    "main": "lib/broadcast.js",
     "repository": "git@github.com:MarcL/chatfuel-broadcast.git",
     "author": "Marc Littlemore <marc.littlemore@gmail.com>",
     "license": "MIT",
     "private": false,
     "scripts": {
-        "build": ""
+        "build": "babel src -d lib",
+        "test": "mocha"
+    },
+    "dependencies": {
+        "request": "~2.85.0",
+        "request-promise": "~4.2.2"
+    },
+    "devDependencies": {
+        "babel-cli": "~6.26.0",
+        "babel-preset-env": "~1.6.1",
+        "babel-register": "~6.26.0",
+        "chai": "~4.1.2",
+        "mocha": "~5.0.5",
+        "sinon": "~4.5.0"
     }
 }
