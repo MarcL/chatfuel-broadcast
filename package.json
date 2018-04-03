@@ -1,0 +1,13 @@
+{
+    "name": "chatfuel-broadcast",
+    "version": "0.1.0",
+    "description": "Wrapper for Chatfuel broadcast API",
+    "main": "index.js",
+    "repository": "git@github.com:MarcL/chatfuel-broadcast.git",
+    "author": "Marc Littlemore <marc.littlemore@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "build": ""
+    }
+}
