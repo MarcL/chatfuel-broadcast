@@ -51,6 +51,7 @@ const broadcast = (options) => {
         headers: {
             'Content-Type': 'application/json',
         },
+        json: true,
     };
 
     return requestPromise.post(requestOptions);

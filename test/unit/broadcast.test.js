@@ -85,6 +85,14 @@ describe('Chatfuel.broadcast()', () => {
             .to.deep.equal(expectedRequestHeaders);
     });
 
+    it('should expect a JSON response', () => {
+        broadcast(defaultOptions);
+
+        // eslint-disable-next-line no-unused-expressions
+        expect(stubRequestPromisePost.getCall(0).args[0].json)
+            .to.be.true;
+    });
+
     it('should append passed attributes as endpoint query parameters', () => {
         const givenAttributes = {
             fakeattribute1: 'fakeAttribute1',
