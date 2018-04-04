@@ -1,5 +1,7 @@
 # chatfuel-broadcast
 
+[![Build Status](https://travis-ci.org/MarcL/chatfuel-broadcast.svg?branch=master)](https://travis-ci.org/MarcL/chatfuel-broadcast)
+
 A simplified client for using the [Chatfuel broadcast API](http://docs.chatfuel.com/broadcasting/broadcasting-documentation/broadcasting-api).
 
 ## Installation
