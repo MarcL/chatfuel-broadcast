@@ -29,6 +29,13 @@ describe('Chatfuel.broadcast()', () => {
     });
 
     describe('should throw expected error', () => {
+        it('when no options are passed', () => {
+            delete defaultOptions.botId;
+            const wrapperFunction = () => broadcast();
+
+            expect(wrapperFunction).to.throw('Expected options to be passed');
+        });
+
         it('when botId is missing', () => {
             delete defaultOptions.botId;
             const wrapperFunction = () => broadcast(defaultOptions);

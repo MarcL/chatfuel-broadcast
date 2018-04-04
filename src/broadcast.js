@@ -10,6 +10,10 @@ const validateExpectedParameters = (options) => {
         'botId', 'blockId', 'token', 'userId',
     ];
 
+    if (!options) {
+        throw new Error('Expected options to be passed');
+    }
+
     expectedParameters.forEach((parameter) => {
         if (!options[parameter]) {
             throw new Error(`Expected ${parameter} to be passed`);
