@@ -1,3 +1,4 @@
+import isHex from 'is-hex';
 import requestPromise from 'request-promise';
 import url from 'url';
 
@@ -6,9 +7,7 @@ import url from 'url';
 const CHATFUEL_BASE_URL = 'https://api.chatfuel.com';
 
 const validateExpectedParameters = (options) => {
-    const expectedParameters = [
-        'botId', 'blockId', 'token', 'userId',
-    ];
+    const expectedParameters = ['botId', 'token', 'userId'];
 
     if (!options) {
         throw new Error('Expected options to be passed');
@@ -21,13 +20,37 @@ const validateExpectedParameters = (options) => {
     });
 };
 
-const createChatfuelBroadcastUrl = (botId, userId) => `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
+const getBlockIdOrNameFromOptions = (options) => {
+    const { blockId, blockName } = options;
+
+    if (!blockName && !blockId) {
+        throw new Error('Expected either blockId or blockName to be passed');
+    }
+
+    if (blockName && blockId) {
+        throw new Error('Expected blockId or blockName to be passed but not both');
+    }
+
+    if (blockId) {
+        if (!isHex(blockId)) {
+            throw new Error('Expected blockId to contain a hexadecimal value');
+        }
+
+        return { chatfuel_block_id: blockId };
+    }
+
+    return { chatfuel_block_name: blockName };
+};
+
+const createChatfuelBroadcastUrl = (botId, userId) =>
+    `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
 
 const broadcast = (options) => {
     validateExpectedParameters(options);
+    const chatfuelRedirectBlock = getBlockIdOrNameFromOptions(options);
 
     const {
-        botId, blockId, token, userId, attributes,
+        botId, token, userId, attributes,
     } = options;
 
     const chatfuelBroadcastUrl = createChatfuelBroadcastUrl(botId, userId);
@@ -36,8 +59,8 @@ const broadcast = (options) => {
         {},
         {
             chatfuel_token: token,
-            chatfuel_block_name: blockId,
         },
+        chatfuelRedirectBlock,
         attributes,
     );
 

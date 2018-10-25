@@ -32,7 +32,9 @@ import chatfuelBroadcast from 'chatfuel-broadcast';
 const chatfuelBroadcast = require('chatfuel-broadcast').default;
 ```
 
-Create an options object which defines the mandatory you need. Add in the attributes property for the Chatfuel user attributes you want to set:
+Create an options object which contains the mandatory parameters of `botId`, `token` and `userId`. You will find your `botId` in the Chatfuel dashboard URL for your bot and the `token` is defined in your dashboard. Note that you can only set either `blockId` or `blockName` but you can't pass both parameters. The `blockId` can be seen in the URL of the Chatfuel bot, or you can just use the block name that you define.
+
+Add in the attributes property for the Chatfuel user attributes you want to set:
 
 ```javascript
 const options = {
@@ -40,7 +42,11 @@ const options = {
     botId: '<chatfuel-bot-id>',
     token: '<chatfuel-token>',
     userId: '<chatfuel-user-id>',
-    blockId: '<chatfuel-block-name-to-return-to>',
+
+    // Only one of these is needed
+    // An error will be thrown if both are passed
+    blockName: '<chatfuel-block-name-to-return-to>',
+    blockId: '<chatfuel-block-id-to-return-to>',
 
     // User attributes which will be set in Chatfuel
     attributes: {
@@ -74,4 +80,5 @@ yarn test
 ```
 
 ## Licence
+
 This project is licensed under the MIT Licence - see the [LICENCE](LICENSE) file for details.
