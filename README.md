@@ -28,11 +28,13 @@ import chatfuelBroadcast from 'chatfuel-broadcast';
 ```
 
 ```javascript
-// For ES5 modules
-const chatfuelBroadcast = require('chatfuel-broadcast').default;
+// For CommonJS modules
+const chatfuelBroadcast = require('chatfuel-broadcast');
 ```
 
 Create an options object which contains the mandatory parameters of `botId`, `token` and `userId`. You will find your `botId` in the Chatfuel dashboard URL for your bot and the `token` is defined in your dashboard. Note that you can only set either `blockId` or `blockName` but you can't pass both parameters. The `blockId` can be seen in the URL of the Chatfuel bot, or you can just use the block name that you define.
+
+Facebook message tags are now mandatory and an error will be thrown if one isn't passed. See [Facebook's message tags](https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags) documentation for a list of valid tags.
 
 Add in the attributes property for the Chatfuel user attributes you want to set:
 
@@ -42,6 +44,7 @@ const options = {
     botId: '<chatfuel-bot-id>',
     token: '<chatfuel-token>',
     userId: '<chatfuel-user-id>',
+    messageTag: '<facebook-message-tag>',
 
     // Only one of these is needed
     // An error will be thrown if both are passed

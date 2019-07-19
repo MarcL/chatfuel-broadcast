@@ -1,13 +1,14 @@
 import isHex from 'is-hex';
 import requestPromise from 'request-promise';
 import url from 'url';
+import validateFacebookTags from './validateFacebookTags';
 
 // http://docs.chatfuel.com/broadcasting/broadcasting-documentation/broadcasting-api
 
 const CHATFUEL_BASE_URL = 'https://api.chatfuel.com';
 
 const validateExpectedParameters = (options) => {
-    const expectedParameters = ['botId', 'token', 'userId'];
+    const expectedParameters = ['botId', 'token', 'userId', 'messageTag'];
 
     if (!options) {
         throw new Error('Expected options to be passed');
@@ -42,16 +43,20 @@ const getBlockIdOrNameFromOptions = (options) => {
     return { chatfuel_block_name: blockName };
 };
 
-const createChatfuelBroadcastUrl = (botId, userId) =>
-    `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
+const createChatfuelBroadcastUrl = (botId, userId) => `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
 
 const broadcast = (options) => {
     validateExpectedParameters(options);
-    const chatfuelRedirectBlock = getBlockIdOrNameFromOptions(options);
 
     const {
-        botId, token, userId, attributes,
+        botId, token, userId, attributes, messageTag,
     } = options;
+
+    const chatfuelRedirectBlock = getBlockIdOrNameFromOptions(options);
+
+    if (!validateFacebookTags(messageTag)) {
+        throw new Error(`Invalid Facebook message tag '${messageTag}'`);
+    }
 
     const chatfuelBroadcastUrl = createChatfuelBroadcastUrl(botId, userId);
 
@@ -59,6 +64,7 @@ const broadcast = (options) => {
         {},
         {
             chatfuel_token: token,
+            chatfuel_message_tag: messageTag,
         },
         chatfuelRedirectBlock,
         attributes,
@@ -80,4 +86,4 @@ const broadcast = (options) => {
     return requestPromise.post(requestOptions);
 };
 
-export default broadcast;
+module.exports = broadcast;
