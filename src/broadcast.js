@@ -86,4 +86,4 @@ const broadcast = (options) => {
     return requestPromise.post(requestOptions);
 };
 
-export default broadcast;
+module.exports = broadcast;
