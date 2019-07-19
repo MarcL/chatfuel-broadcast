@@ -35,5 +35,8 @@
             "pre-commit": "yarn lint",
             "pre-push": "yarn test"
         }
+    },
+    "engines": {
+        "node": ">=8.0.0"
     }
 }
