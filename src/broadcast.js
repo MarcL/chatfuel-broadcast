@@ -43,8 +43,7 @@ const getBlockIdOrNameFromOptions = (options) => {
     return { chatfuel_block_name: blockName };
 };
 
-const createChatfuelBroadcastUrl = (botId, userId) =>
-    `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
+const createChatfuelBroadcastUrl = (botId, userId) => `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
 
 const broadcast = (options) => {
     validateExpectedParameters(options);

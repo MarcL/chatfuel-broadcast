@@ -192,8 +192,7 @@ describe('Chatfuel.broadcast()', () => {
             fakeattribute2: 'fakeAttribute2',
         };
         const options = Object.assign({}, defaultOptions, { attributes: givenAttributes });
-        const fakeAttributeQueryParameters =
-            'fakeattribute1=fakeAttribute1&fakeattribute2=fakeAttribute2';
+        const fakeAttributeQueryParameters = 'fakeattribute1=fakeAttribute1&fakeattribute2=fakeAttribute2';
 
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
         const queryParameters = `?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_id=${defaultBlocklId}&${fakeAttributeQueryParameters}`;
