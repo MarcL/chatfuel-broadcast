@@ -1,18 +1,18 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import validFacebookTags from '../../src/validFacebookTags';
+import validateFacebookTags from '../../src/validateFacebookTags';
 
-describe('validFacebookTags()', () => {
+describe('Validate Facebook tags', () => {
     it('should be false if no tag given', () => {
-        expect(validFacebookTags()).to.be.false;
+        expect(validateFacebookTags()).to.be.false;
     });
 
     it('should be false if invalid tag given', () => {
-        expect(validFacebookTags('invalid_tag')).to.be.false;
+        expect(validateFacebookTags('invalid_tag')).to.be.false;
     });
 
     it('should be false if valid tag has incorrect case', () => {
-        expect(validFacebookTags('business_productivity')).to.be.false;
+        expect(validateFacebookTags('business_productivity')).to.be.false;
     });
 
     [
@@ -35,7 +35,7 @@ describe('validFacebookTags()', () => {
         'TICKET_UPDATE',
     ].forEach((tag) => {
         it(`should be true if valid tag '${tag}' given`, () => {
-            expect(validFacebookTags(tag)).to.be.true;
+            expect(validateFacebookTags(tag)).to.be.true;
         });
     });
 });

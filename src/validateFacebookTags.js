@@ -19,6 +19,6 @@ const validFacebookTags = [
     'TICKET_UPDATE',
 ];
 
-const isValidFacebookTag = tag => validFacebookTags.includes(tag);
+const validateFacebookTags = tag => validFacebookTags.includes(tag);
 
-export default isValidFacebookTag;
+export default validateFacebookTags;

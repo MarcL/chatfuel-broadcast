@@ -13,6 +13,7 @@ describe('Chatfuel.broadcast()', () => {
     const defaultUserId = 'defaultUserId';
     const defaultBlocklId = '42A5BB955DE61E47';
     const defaultBlockName = 'defaultBlockName';
+    const defaultMessageTag = 'NON_PROMOTIONAL_SUBSCRIPTION';
 
     beforeEach(() => {
         defaultOptions = {
@@ -20,6 +21,7 @@ describe('Chatfuel.broadcast()', () => {
             blockId: defaultBlocklId,
             token: defaultToken,
             userId: defaultUserId,
+            messageTag: defaultMessageTag,
             attributes: {},
         };
 
@@ -59,11 +61,19 @@ describe('Chatfuel.broadcast()', () => {
             expect(wrapperFunction).to.throw('Expected userId to be passed');
         });
 
+        it('when messageTag is missing', () => {
+            delete defaultOptions.messageTag;
+            const wrapperFunction = () => broadcast(defaultOptions);
+
+            expect(wrapperFunction).to.throw('Expected messageTag to be passed');
+        });
+
         it('when both blockId and blockName are missing', () => {
             const passedOptions = {
                 botId: defaultBotId,
                 token: defaultToken,
                 userId: defaultUserId,
+                messageTag: defaultMessageTag,
                 attributes: {},
             };
 
@@ -79,6 +89,7 @@ describe('Chatfuel.broadcast()', () => {
                 userId: defaultUserId,
                 blockId: defaultBlocklId,
                 blockName: defaultBlockName,
+                messageTag: defaultMessageTag,
                 attributes: {},
             };
 
@@ -96,11 +107,22 @@ describe('Chatfuel.broadcast()', () => {
 
             expect(wrapperFunction).to.throw('Expected blockId to contain a hexadecimal value');
         });
+
+        it('when messageTag is invalid', () => {
+            const invalidMessageTag = 'invalidMessageTag';
+            const passedOptions = Object.assign({}, defaultOptions, {
+                messageTag: invalidMessageTag,
+            });
+
+            const wrapperFunction = () => broadcast(passedOptions);
+
+            expect(wrapperFunction).to.throw(`Invalid Facebook message tag '${invalidMessageTag}'`);
+        });
     });
 
     it('should call expected endpoint when blockId is passed', () => {
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
-        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_block_id=${defaultBlocklId}`;
+        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_id=${defaultBlocklId}`;
 
         return broadcast(defaultOptions).then(() => {
             expect(stubRequestPromisePost.getCall(0).args[0].uri).to.equal(expectedUri);
@@ -109,13 +131,14 @@ describe('Chatfuel.broadcast()', () => {
 
     it('should call expected endpoint when blockName is passed', () => {
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
-        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_block_name=${defaultBlockName}`;
+        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_name=${defaultBlockName}`;
 
         const passedOptions = {
             botId: defaultBotId,
             token: defaultToken,
             userId: defaultUserId,
             blockName: defaultBlockName,
+            messageTag: defaultMessageTag,
             attributes: {},
         };
 
@@ -127,13 +150,14 @@ describe('Chatfuel.broadcast()', () => {
     it('should call expected endpoint with URL encoded blockName', () => {
         const givenBlockName = 'Given Block Name';
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
-        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_block_name=${encodeURIComponent(givenBlockName)}`;
+        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_name=${encodeURIComponent(givenBlockName)}`;
 
         const passedOptions = {
             botId: defaultBotId,
             token: defaultToken,
             userId: defaultUserId,
             blockName: givenBlockName,
+            messageTag: defaultMessageTag,
             attributes: {},
         };
 
@@ -172,7 +196,7 @@ describe('Chatfuel.broadcast()', () => {
             'fakeattribute1=fakeAttribute1&fakeattribute2=fakeAttribute2';
 
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
-        const queryParameters = `?chatfuel_token=${defaultToken}&chatfuel_block_id=${defaultBlocklId}&${fakeAttributeQueryParameters}`;
+        const queryParameters = `?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_id=${defaultBlocklId}&${fakeAttributeQueryParameters}`;
         const expectedUri = `${chatfuelEndpointUrl}${queryParameters}`;
 
         return broadcast(options).then(() => {
