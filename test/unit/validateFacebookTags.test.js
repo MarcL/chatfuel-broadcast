@@ -16,6 +16,7 @@ describe('Validate Facebook tags', () => {
     });
 
     [
+        // Deprecated tags
         'BUSINESS_PRODUCTIVITY',
         'COMMUNITY_ALERT',
         'CONFIRMED_EVENT_REMINDER',
@@ -33,6 +34,12 @@ describe('Validate Facebook tags', () => {
         'TRANSPORTATION_UPDATE',
         'FEATURE_FUNCTIONALITY_UPDATE',
         'TICKET_UPDATE',
+
+        // New valid tags
+        'CONFIRMED_EVENT_UPDATE',
+        'POST_PURCHASE_UPDATE',
+        'ACCOUNT_UPDATE',
+        'HUMAN_AGENT',
     ].forEach((tag) => {
         it(`should be true if valid tag '${tag}' given`, () => {
             expect(validateFacebookTags(tag)).to.be.true;

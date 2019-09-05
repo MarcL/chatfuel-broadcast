@@ -1,5 +1,7 @@
 // https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags
-const validFacebookTags = [
+
+// TODO: Remove these from January 15th 2020
+const deprecatedFacebookTags = [
     'BUSINESS_PRODUCTIVITY',
     'COMMUNITY_ALERT',
     'CONFIRMED_EVENT_REMINDER',
@@ -19,6 +21,15 @@ const validFacebookTags = [
     'TICKET_UPDATE',
 ];
 
-const validateFacebookTags = tag => validFacebookTags.includes(tag);
+const validFacebookTags = [
+    'CONFIRMED_EVENT_UPDATE',
+    'POST_PURCHASE_UPDATE',
+    'ACCOUNT_UPDATE',
+    'HUMAN_AGENT',
+];
+
+const allValidTags = [...deprecatedFacebookTags, ...validFacebookTags];
+
+const validateFacebookTags = tag => allValidTags.includes(tag);
 
 export default validateFacebookTags;
