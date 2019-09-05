@@ -34,6 +34,7 @@ describe('Validate Facebook tags', () => {
         'TRANSPORTATION_UPDATE',
         'FEATURE_FUNCTIONALITY_UPDATE',
         'TICKET_UPDATE',
+
         // New valid tags
         'CONFIRMED_EVENT_UPDATE',
         'POST_PURCHASE_UPDATE',
