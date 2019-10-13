@@ -21,6 +21,10 @@ const deprecatedFacebookTags = [
     'TICKET_UPDATE',
 ];
 
+const chatfuelTags = [
+    'UPDATE',
+];
+
 const validFacebookTags = [
     'CONFIRMED_EVENT_UPDATE',
     'POST_PURCHASE_UPDATE',
@@ -28,7 +32,7 @@ const validFacebookTags = [
     'HUMAN_AGENT',
 ];
 
-const allValidTags = [...deprecatedFacebookTags, ...validFacebookTags];
+const allValidTags = [...deprecatedFacebookTags, ...validFacebookTags, ...chatfuelTags];
 
 const validateFacebookTags = tag => allValidTags.includes(tag);
 

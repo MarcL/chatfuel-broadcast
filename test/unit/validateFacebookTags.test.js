@@ -40,6 +40,9 @@ describe('Validate Facebook tags', () => {
         'POST_PURCHASE_UPDATE',
         'ACCOUNT_UPDATE',
         'HUMAN_AGENT',
+
+        // Chatfuel tags
+        'UPDATE',
     ].forEach((tag) => {
         it(`should be true if valid tag '${tag}' given`, () => {
             expect(validateFacebookTags(tag)).to.be.true;
