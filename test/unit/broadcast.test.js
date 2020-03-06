@@ -99,9 +99,7 @@ describe('Chatfuel.broadcast()', () => {
         });
 
         it("when blockId is passed but isn't a hex value", () => {
-            const passedOptions = Object.assign({}, defaultOptions, {
-                blockId: 'NotAHexValue',
-            });
+            const passedOptions = { ...defaultOptions, blockId: 'NotAHexValue' };
 
             const wrapperFunction = () => broadcast(passedOptions);
 
@@ -110,9 +108,7 @@ describe('Chatfuel.broadcast()', () => {
 
         it('when messageTag is invalid', () => {
             const invalidMessageTag = 'invalidMessageTag';
-            const passedOptions = Object.assign({}, defaultOptions, {
-                messageTag: invalidMessageTag,
-            });
+            const passedOptions = { ...defaultOptions, messageTag: invalidMessageTag };
 
             const wrapperFunction = () => broadcast(passedOptions);
 
@@ -191,7 +187,7 @@ describe('Chatfuel.broadcast()', () => {
             fakeattribute1: 'fakeAttribute1',
             fakeattribute2: 'fakeAttribute2',
         };
-        const options = Object.assign({}, defaultOptions, { attributes: givenAttributes });
+        const options = { ...defaultOptions, attributes: givenAttributes };
         const fakeAttributeQueryParameters = 'fakeattribute1=fakeAttribute1&fakeattribute2=fakeAttribute2';
 
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;

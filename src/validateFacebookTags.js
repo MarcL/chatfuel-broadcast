@@ -7,6 +7,6 @@ const validFacebookTags = [
     'HUMAN_AGENT',
 ];
 
-const validateFacebookTags = tag => validFacebookTags.includes(tag);
+const validateFacebookTags = (tag) => validFacebookTags.includes(tag);
 
 export default validateFacebookTags;

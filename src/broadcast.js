@@ -60,15 +60,13 @@ const broadcast = (options) => {
 
     const chatfuelBroadcastUrl = createChatfuelBroadcastUrl(botId, userId);
 
-    const query = Object.assign(
-        {},
-        {
-            chatfuel_token: token,
-            chatfuel_message_tag: messageTag,
-        },
-        chatfuelRedirectBlock,
-        attributes,
-    );
+    const query = {
+
+        chatfuel_token: token,
+        chatfuel_message_tag: messageTag,
+        ...chatfuelRedirectBlock,
+        ...attributes,
+    };
 
     const chatfuelApiUrl = url.format({
         pathname: chatfuelBroadcastUrl,
