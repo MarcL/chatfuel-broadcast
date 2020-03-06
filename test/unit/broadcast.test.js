@@ -13,7 +13,7 @@ describe('Chatfuel.broadcast()', () => {
     const defaultUserId = 'defaultUserId';
     const defaultBlocklId = '42A5BB955DE61E47';
     const defaultBlockName = 'defaultBlockName';
-    const defaultMessageTag = 'NON_PROMOTIONAL_SUBSCRIPTION';
+    const defaultMessageTag = 'CONFIRMED_EVENT_UPDATE';
 
     beforeEach(() => {
         defaultOptions = {
