@@ -1,5 +1,9 @@
 // https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags
 
+const validChatfuelTags = [
+    'UPDATE',
+];
+
 const validFacebookTags = [
     'CONFIRMED_EVENT_UPDATE',
     'POST_PURCHASE_UPDATE',
@@ -7,6 +11,8 @@ const validFacebookTags = [
     'HUMAN_AGENT',
 ];
 
-const validateFacebookTags = (tag) => validFacebookTags.includes(tag);
+const allValidTags = [...validFacebookTags, ...validChatfuelTags];
+
+const validateFacebookTags = (tag) => allValidTags.includes(tag);
 
 export default validateFacebookTags;

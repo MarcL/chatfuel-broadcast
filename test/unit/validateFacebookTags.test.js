@@ -12,10 +12,11 @@ describe('Validate Facebook tags', () => {
     });
 
     it('should be false if valid tag has incorrect case', () => {
-        expect(validateFacebookTags('business_productivity')).to.be.false;
+        expect(validateFacebookTags('update')).to.be.false;
     });
 
     [
+        'UPDATE',
         'CONFIRMED_EVENT_UPDATE',
         'POST_PURCHASE_UPDATE',
         'ACCOUNT_UPDATE',
