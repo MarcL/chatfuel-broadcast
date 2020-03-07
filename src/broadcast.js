@@ -1,11 +1,13 @@
 import isHex from 'is-hex';
 import requestPromise from 'request-promise';
+import axios from 'axios';
 import url from 'url';
 import validateFacebookTags from './validateFacebookTags';
 
 // http://docs.chatfuel.com/broadcasting/broadcasting-documentation/broadcasting-api
 
 const CHATFUEL_BASE_URL = 'https://api.chatfuel.com';
+const CHATFUEL_API_RATE_LIMIT_REQUESTS_PER_SECOND = 25;
 
 const validateExpectedParameters = (options) => {
     const expectedParameters = ['botId', 'token', 'userId', 'messageTag'];
@@ -45,6 +47,30 @@ const getBlockIdOrNameFromOptions = (options) => {
 
 const createChatfuelBroadcastUrl = (botId, userId) => `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
 
+const makeRequest = (uri) => {
+    const requestOptions = {
+        uri,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        json: true,
+    };
+
+    return requestPromise.post(requestOptions);
+};
+
+const makeAxiosRequest = (requestUrl) => {
+    const requestOptions = {
+        method: 'post',
+        url: requestUrl,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    return axios(requestOptions);
+};
+
 const broadcast = (options) => {
     validateExpectedParameters(options);
 
@@ -73,15 +99,7 @@ const broadcast = (options) => {
         query,
     });
 
-    const requestOptions = {
-        uri: chatfuelApiUrl,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        json: true,
-    };
-
-    return requestPromise.post(requestOptions);
+    return makeRequest(chatfuelApiUrl);
 };
 
 module.exports = broadcast;
