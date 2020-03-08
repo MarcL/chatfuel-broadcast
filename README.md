@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/MarcL/chatfuel-broadcast.svg?branch=master)](https://travis-ci.org/MarcL/chatfuel-broadcast)
 
-A simplified client for using the [Chatfuel broadcast API](http://docs.chatfuel.com/broadcasting/broadcasting-documentation/broadcasting-api).
+A simplified client for using the [Chatfuel broadcast API](http://docs.chatfuel.com/broadcasting/broadcasting-documentation/broadcasting-api) which includes rate limiting.
 
 ## Installation
 
@@ -35,6 +35,8 @@ const chatfuelBroadcast = require('chatfuel-broadcast');
 Create an options object which contains the mandatory parameters of `botId`, `token` and `userId`. You will find your `botId` in the Chatfuel dashboard URL for your bot and the `token` is defined in your dashboard. Note that you can only set either `blockId` or `blockName` but you can't pass both parameters. The `blockId` can be seen in the URL of the Chatfuel bot, or you can just use the block name that you define.
 
 Facebook message tags are now mandatory and an error will be thrown if one isn't passed. See [Facebook's message tags](https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags) documentation for a list of valid tags.
+
+_**Note:** In addition to a the valid Facebook Messenger tags, there is a single Chatfuel-specific tag called `UPDATE`. You can **ONLY** use this tag with the broadcast API to send a message if you have recieved an interaction from your user within the previous 24 hours. Your chatbot will get banned if you fail to adhere to this rule._
 
 Add in the attributes property for the Chatfuel user attributes you want to set:
 
@@ -72,6 +74,45 @@ chatfuelBroadcast(options)
         console.log(error.message);
     });
 ```
+
+## TODO: Update response from Chatfuel
+
+Success: (200)
+
+```json
+{
+    "result": "ok",
+    "success": true
+}
+```
+
+Failure: (400)
+```json
+{
+  "result": "Bad Request: Message tag UPDATE2 is invalid",
+  "success": false,
+  "errors": [
+    "Bad Request: Message tag UPDATE2 is invalid"
+  ],
+  "message": null
+}
+```
+
+Rate limited: (429)
+```json
+{
+	"result": "Too many requests: RPS limit reached",
+	"success": false,
+	"errors": [
+        "Too many requests: RPS limit reached"
+    ],
+	"message": null
+}
+```
+
+## Rate limiting
+
+The Chatfuel documentation states that you can broadcast up to 25 request per second (RPS) using their [broadcast API](https://docs.chatfuel.com/en/articles/790461-broadcasting-api). This package sets this rate limit for you and avoids you having to add additional rate limiting logic in your own code.
 
 ## Running the tests
 
