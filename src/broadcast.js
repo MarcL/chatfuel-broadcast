@@ -56,7 +56,9 @@ const makeHttpRequest = (requestUrl) => {
 
     return httpClient(requestOptions)
         .then((response) => response.data.result)
-        .catch((error) => error.response.data.result);
+        .catch((error) => {
+            throw new Error(error.response.data.result);
+        });
 };
 
 const broadcast = (options) => {
