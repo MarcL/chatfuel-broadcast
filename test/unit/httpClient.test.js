@@ -5,7 +5,7 @@ jest.mock('axios-rate-limit');
 jest.mock('axios');
 
 describe('httpClient', () => {
-    it('should set expected Chatfuel rate limiting options', () => {
+    it('should set expected rate limiting options', () => {
         const fakeAxiosCreateResponse = {
             get: () => {},
         };
