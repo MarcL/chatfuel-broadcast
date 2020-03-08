@@ -1,6 +1,6 @@
 {
     "name": "chatfuel-broadcast",
-    "version": "2.2.0",
+    "version": "3.0.0",
     "description": "Wrapper for Chatfuel broadcast API",
     "main": "lib/broadcast.js",
     "repository": "git@github.com:MarcL/chatfuel-broadcast.git",
