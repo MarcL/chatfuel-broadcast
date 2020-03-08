@@ -1,12 +1,11 @@
-// eslint-disable-next-line max-len
-import sinon from 'sinon';
-import { expect } from 'chai';
-import requestPromise from 'request-promise';
+import httpClient from '../../src/httpClient';
 import broadcast from '../../src/broadcast';
+
+jest.mock('../../src/httpClient');
 
 describe('Chatfuel.broadcast()', () => {
     let defaultOptions;
-    let stubRequestPromisePost;
+    let stubHttpClient;
 
     const defaultBotId = 'defaultBotId';
     const defaultToken = 'defaultToken';
@@ -14,6 +13,14 @@ describe('Chatfuel.broadcast()', () => {
     const defaultBlocklId = '42A5BB955DE61E47';
     const defaultBlockName = 'defaultBlockName';
     const defaultMessageTag = 'CONFIRMED_EVENT_UPDATE';
+
+    const defaultSuccessMessage = 'defaultSuccessMessage';
+    const defaultSuccessResponse = {
+        data: {
+            result: defaultSuccessMessage,
+            success: true,
+        },
+    };
 
     beforeEach(() => {
         defaultOptions = {
@@ -25,11 +32,8 @@ describe('Chatfuel.broadcast()', () => {
             attributes: {},
         };
 
-        stubRequestPromisePost = sinon.stub(requestPromise, 'post').resolves();
-    });
-
-    afterEach(() => {
-        stubRequestPromisePost.restore();
+        stubHttpClient = Promise.resolve(defaultSuccessResponse);
+        httpClient.mockReturnValue(stubHttpClient);
     });
 
     describe('should throw expected error', () => {
@@ -37,35 +41,35 @@ describe('Chatfuel.broadcast()', () => {
             delete defaultOptions.botId;
             const wrapperFunction = () => broadcast();
 
-            expect(wrapperFunction).to.throw('Expected options to be passed');
+            expect(wrapperFunction).toThrowError('Expected options to be passed');
         });
 
         it('when botId is missing', () => {
             delete defaultOptions.botId;
             const wrapperFunction = () => broadcast(defaultOptions);
 
-            expect(wrapperFunction).to.throw('Expected botId to be passed');
+            expect(wrapperFunction).toThrowError('Expected botId to be passed');
         });
 
         it('when token is missing', () => {
             delete defaultOptions.token;
             const wrapperFunction = () => broadcast(defaultOptions);
 
-            expect(wrapperFunction).to.throw('Expected token to be passed');
+            expect(wrapperFunction).toThrowError('Expected token to be passed');
         });
 
         it('when userId is missing', () => {
             delete defaultOptions.userId;
             const wrapperFunction = () => broadcast(defaultOptions);
 
-            expect(wrapperFunction).to.throw('Expected userId to be passed');
+            expect(wrapperFunction).toThrowError('Expected userId to be passed');
         });
 
         it('when messageTag is missing', () => {
             delete defaultOptions.messageTag;
             const wrapperFunction = () => broadcast(defaultOptions);
 
-            expect(wrapperFunction).to.throw('Expected messageTag to be passed');
+            expect(wrapperFunction).toThrowError('Expected messageTag to be passed');
         });
 
         it('when both blockId and blockName are missing', () => {
@@ -79,7 +83,7 @@ describe('Chatfuel.broadcast()', () => {
 
             const wrapperFunction = () => broadcast(passedOptions);
 
-            expect(wrapperFunction).to.throw('Expected either blockId or blockName to be passed');
+            expect(wrapperFunction).toThrowError('Expected either blockId or blockName to be passed');
         });
 
         it('when both blockId and blockName are passed', () => {
@@ -95,7 +99,7 @@ describe('Chatfuel.broadcast()', () => {
 
             const wrapperFunction = () => broadcast(passedOptions);
 
-            expect(wrapperFunction).to.throw('Expected blockId or blockName to be passed but not both');
+            expect(wrapperFunction).toThrowError('Expected blockId or blockName to be passed but not both');
         });
 
         it("when blockId is passed but isn't a hex value", () => {
@@ -103,7 +107,7 @@ describe('Chatfuel.broadcast()', () => {
 
             const wrapperFunction = () => broadcast(passedOptions);
 
-            expect(wrapperFunction).to.throw('Expected blockId to contain a hexadecimal value');
+            expect(wrapperFunction).toThrowError('Expected blockId to contain a hexadecimal value');
         });
 
         it('when messageTag is invalid', () => {
@@ -112,22 +116,39 @@ describe('Chatfuel.broadcast()', () => {
 
             const wrapperFunction = () => broadcast(passedOptions);
 
-            expect(wrapperFunction).to.throw(`Invalid Facebook message tag '${invalidMessageTag}'`);
+            expect(wrapperFunction).toThrowError(`Invalid Facebook or Chatfuel message tag '${invalidMessageTag}'`);
         });
     });
 
-    it('should call expected endpoint when blockId is passed', () => {
+    it('should make expected HTTP request when blockId is passed', () => {
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
-        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_id=${defaultBlocklId}`;
+        const expectedUrl = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_id=${defaultBlocklId}`;
 
-        return broadcast(defaultOptions).then(() => {
-            expect(stubRequestPromisePost.getCall(0).args[0].uri).to.equal(expectedUri);
-        });
+        const expectedOptions = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'post',
+            url: expectedUrl,
+        };
+
+        return broadcast(defaultOptions)
+            .then(() => {
+                expect(httpClient).toHaveBeenCalledWith(expectedOptions);
+            });
     });
 
-    it('should call expected endpoint when blockName is passed', () => {
+    it('should make expected HTTP request when blockName is passed', () => {
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
-        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_name=${defaultBlockName}`;
+        const expectedUrl = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_name=${defaultBlockName}`;
+
+        const expectedOptions = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'post',
+            url: expectedUrl,
+        };
 
         const passedOptions = {
             botId: defaultBotId,
@@ -139,14 +160,22 @@ describe('Chatfuel.broadcast()', () => {
         };
 
         return broadcast(passedOptions).then(() => {
-            expect(stubRequestPromisePost.getCall(0).args[0].uri).to.equal(expectedUri);
+            expect(httpClient).toHaveBeenCalledWith(expectedOptions);
         });
     });
 
-    it('should call expected endpoint with URL encoded blockName', () => {
+    it('should make expected HTTP request with URL encoded blockName', () => {
         const givenBlockName = 'Given Block Name';
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
-        const expectedUri = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_name=${encodeURIComponent(givenBlockName)}`;
+        const expectedUrl = `${chatfuelEndpointUrl}?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_name=${encodeURIComponent(givenBlockName)}`;
+
+        const expectedOptions = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'post',
+            url: expectedUrl,
+        };
 
         const passedOptions = {
             botId: defaultBotId,
@@ -158,27 +187,7 @@ describe('Chatfuel.broadcast()', () => {
         };
 
         return broadcast(passedOptions).then(() => {
-            expect(stubRequestPromisePost.getCall(0).args[0].uri).to.equal(expectedUri);
-        });
-    });
-
-    it('should set expected request headers', () => {
-        const expectedRequestHeaders = {
-            'Content-Type': 'application/json',
-        };
-
-        return broadcast(defaultOptions).then(() => {
-            // eslint-disable-next-line max-len
-            expect(stubRequestPromisePost.getCall(0).args[0].headers).to.deep.equal(expectedRequestHeaders);
-        });
-    });
-
-    it('should expect a JSON response', () => {
-        broadcast(defaultOptions);
-
-        return broadcast(defaultOptions).then(() => {
-            // eslint-disable-next-line no-unused-expressions
-            expect(stubRequestPromisePost.getCall(0).args[0].json).to.be.true;
+            expect(httpClient).toHaveBeenCalledWith(expectedOptions);
         });
     });
 
@@ -192,10 +201,44 @@ describe('Chatfuel.broadcast()', () => {
 
         const chatfuelEndpointUrl = `https://api.chatfuel.com/bots/${defaultBotId}/users/${defaultUserId}/send`;
         const queryParameters = `?chatfuel_token=${defaultToken}&chatfuel_message_tag=${defaultMessageTag}&chatfuel_block_id=${defaultBlocklId}&${fakeAttributeQueryParameters}`;
-        const expectedUri = `${chatfuelEndpointUrl}${queryParameters}`;
+        const expectedUrl = `${chatfuelEndpointUrl}${queryParameters}`;
+
+        const expectedOptions = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'post',
+            url: expectedUrl,
+        };
 
         return broadcast(options).then(() => {
-            expect(stubRequestPromisePost.getCall(0).args[0].uri).to.equal(expectedUri);
+            expect(httpClient).toHaveBeenCalledWith(expectedOptions);
         });
+    });
+
+    it('should return expected response when request is successful', () => (
+        broadcast(defaultOptions)
+            .then((data) => {
+                expect(data).toEqual(defaultSuccessMessage);
+            })
+    ));
+
+    it('should return expected response when request fails', () => {
+        const mockErrorMessage = 'Mock error message';
+        const error = new Error('Mock error');
+        error.response = {
+            data: {
+                result: mockErrorMessage,
+                success: false,
+            },
+        };
+
+        const httpClientWithError = Promise.reject(error);
+        httpClient.mockReturnValue(httpClientWithError);
+
+        return broadcast(defaultOptions)
+            .then((data) => {
+                expect(data).toEqual(mockErrorMessage);
+            });
     });
 });

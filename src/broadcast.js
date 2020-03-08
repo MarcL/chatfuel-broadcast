@@ -1,13 +1,11 @@
 import isHex from 'is-hex';
-import requestPromise from 'request-promise';
-import axios from 'axios';
 import url from 'url';
 import validateFacebookTags from './validateFacebookTags';
+import httpClient from './httpClient';
 
 // http://docs.chatfuel.com/broadcasting/broadcasting-documentation/broadcasting-api
 
 const CHATFUEL_BASE_URL = 'https://api.chatfuel.com';
-const CHATFUEL_API_RATE_LIMIT_REQUESTS_PER_SECOND = 25;
 
 const validateExpectedParameters = (options) => {
     const expectedParameters = ['botId', 'token', 'userId', 'messageTag'];
@@ -47,19 +45,7 @@ const getBlockIdOrNameFromOptions = (options) => {
 
 const createChatfuelBroadcastUrl = (botId, userId) => `${CHATFUEL_BASE_URL}/bots/${botId}/users/${userId}/send`;
 
-const makeRequest = (uri) => {
-    const requestOptions = {
-        uri,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        json: true,
-    };
-
-    return requestPromise.post(requestOptions);
-};
-
-const makeAxiosRequest = (requestUrl) => {
+const makeHttpRequest = (requestUrl) => {
     const requestOptions = {
         method: 'post',
         url: requestUrl,
@@ -68,7 +54,9 @@ const makeAxiosRequest = (requestUrl) => {
         },
     };
 
-    return axios(requestOptions);
+    return httpClient(requestOptions)
+        .then((response) => response.data.result)
+        .catch((error) => error.response.data.result);
 };
 
 const broadcast = (options) => {
@@ -81,7 +69,7 @@ const broadcast = (options) => {
     const chatfuelRedirectBlock = getBlockIdOrNameFromOptions(options);
 
     if (!validateFacebookTags(messageTag)) {
-        throw new Error(`Invalid Facebook message tag '${messageTag}'`);
+        throw new Error(`Invalid Facebook or Chatfuel message tag '${messageTag}'`);
     }
 
     const chatfuelBroadcastUrl = createChatfuelBroadcastUrl(botId, userId);
@@ -99,7 +87,7 @@ const broadcast = (options) => {
         query,
     });
 
-    return makeRequest(chatfuelApiUrl);
+    return makeHttpRequest(chatfuelApiUrl);
 };
 
 module.exports = broadcast;
