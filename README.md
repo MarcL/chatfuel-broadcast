@@ -66,8 +66,8 @@ Finally, call the broadcast function. It's Promise-based so it expects a then-ab
 ```javascript
 // Promise-based response
 chatfuelBroadcast(options)
-    .then(() => {
-        // No response given if everything is ok
+    .then((responseMessage) => {
+        // responseMessage will be 'ok'
         console.log('Call succeeded');
     })
     .catch(error => {
@@ -75,44 +75,15 @@ chatfuelBroadcast(options)
     });
 ```
 
-## TODO: Update response from Chatfuel
+## Expected responses
 
-Success: (200)
+If the request is successful the API will return an `ok` string (which is the response from Chatfuel's API).
 
-```json
-{
-    "result": "ok",
-    "success": true
-}
-```
-
-Failure: (400)
-```json
-{
-  "result": "Bad Request: Message tag UPDATE2 is invalid",
-  "success": false,
-  "errors": [
-    "Bad Request: Message tag UPDATE2 is invalid"
-  ],
-  "message": null
-}
-```
-
-Rate limited: (429)
-```json
-{
-	"result": "Too many requests: RPS limit reached",
-	"success": false,
-	"errors": [
-        "Too many requests: RPS limit reached"
-    ],
-	"message": null
-}
-```
+If an API request is malformed, for example if you have an invalid block name or block ID, or you supply an incorrect Messenger tag or are missing request data, then the API will throw an error. The error message will inform you of the incorrect or missing data.
 
 ## Rate limiting
 
-The Chatfuel documentation states that you can broadcast up to 25 request per second (RPS) using their [broadcast API](https://docs.chatfuel.com/en/articles/790461-broadcasting-api). This package sets this rate limit for you and avoids you having to add additional rate limiting logic in your own code.
+The Chatfuel documentation states that you can broadcast up to 25 request per second (RPS) using their [broadcast API](https://docs.chatfuel.com/en/articles/790461-broadcasting-api). This package sets this rate limit for you and avoids you having to add additional rate limiting logic in your own code. Note that the broadcast API can still fail if you pass incorrect data (e.g. a bad block name or block ID) so ensure you use an error handler.
 
 ## Running the tests
 
