@@ -223,22 +223,22 @@ describe('Chatfuel.broadcast()', () => {
             })
     ));
 
-    it('should return expected response when request fails', () => {
+    it('should throw expected response when request fails', () => {
         const mockErrorMessage = 'Mock error message';
-        const error = new Error('Mock error');
-        error.response = {
+        const apiError = new Error(mockErrorMessage);
+        apiError.response = {
             data: {
                 result: mockErrorMessage,
                 success: false,
             },
         };
 
-        const httpClientWithError = Promise.reject(error);
+        const httpClientWithError = Promise.reject(apiError);
         httpClient.mockReturnValue(httpClientWithError);
 
         return broadcast(defaultOptions)
-            .then((data) => {
-                expect(data).toEqual(mockErrorMessage);
+            .catch((error) => {
+                expect(error.toString()).toEqual(error.toString());
             });
     });
 });

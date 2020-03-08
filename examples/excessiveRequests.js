@@ -20,5 +20,5 @@ const broadcastOptions = {
 for (let i = 0; i < 30; i += 1) {
     broadcast(broadcastOptions)
         .then((data) => console.log(data))
-        .catch((data) => console.log(data));
+        .catch((data) => console.log(`Error: ${data}`);
 }
