@@ -34,7 +34,7 @@ const chatfuelBroadcast = require('chatfuel-broadcast');
 
 Create an options object which contains the mandatory parameters of `botId`, `token` and `userId`. You will find your `botId` in the Chatfuel dashboard URL for your bot and the `token` is defined in your dashboard. Note that you can only set either `blockId` or `blockName` but you can't pass both parameters. The `blockId` can be seen in the URL of the Chatfuel bot, or you can just use the block name that you define.
 
-Facebook message tags are now mandatory and an error will be thrown if one isn't passed. See [Facebook's message tags](https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags) documentation for a list of valid tags.
+Facebook message tags are now mandatory and an error will be thrown if one isn't passed. See [Facebook's message tags](https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags) documentation for a list of valid tags. You can also supply the `NON_PROMOTIONAL_SUBSCRIPTION` tag but your page must be an approved new page under the [Facebook News Page Index (NPI)](https://www.facebook.com/help/publisher/316333835842972).
 
 _**Note:** In addition to a the valid Facebook Messenger tags, there is a single Chatfuel-specific tag called `UPDATE`. You can **ONLY** use this tag with the broadcast API to send a message if you have recieved an interaction from your user within the previous 24 hours. Your chatbot will get banned if you fail to adhere to this rule._
 
